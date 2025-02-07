@@ -1,0 +1,26 @@
+// Task 1: Database and Collection Creation:
+test> use library
+switched to db library
+library> db.books.insertMany([]);
+
+//Task 2: -Insert Data:
+library> db.books.insertMany([
+... {title: "To Kill a Mockingbird", author: "Harper Lee", publishedYear: 1960, genre: "Fiction", ISBN: "978-0-06-112008-4"},
+... {title: "The Great Gatsby", author: "F. Scott Fitzgerald", publishedYear: 1925, genre: "Classic", ISBN: "978-0-7432-7356-5"}, 
+... {title : "Pride and Prejudice", author: "Jane Austen", publishedYear: 1813, genre: "Romance", ISBN: "978-0-19-953556-9"}, 
+... { title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling", publishedYear: 1997, genre: "Fantasy", ISBN: "978-0-545-01022-1"}, t
+... {title: "The Lord of the Rings", author: "J.R.R. Tolkien", publishedYear: 1954, genre: "Fantasy", ISBN: "978-0-618-64015-7"}
+]);
+
+//Task 3: Retrieve Data:
+library> db.books.find({});
+library> db.books.aggregate([{$match: {author:"Jane Austen"}}]);
+library> db.books.aggregate([ {$match: {publishedYear:{$gte:2000}}} ]);
+
+//Task 4: Update Data
+library> db.books.updateOne({_id: ObjectId('67a669b82cf8d4e71f4d7943')},{$set: {publishedYear: 1969}});
+library> db.books.updateMany({},{$set: {rating:7.0}});
+
+//Task 5: Delete Data
+library> db.books.deleteOne({ISBN: '978-0-06-112008-4',});
+library> db.books.deleteMany({genre: "Fantasy"});
