@@ -1,84 +1,158 @@
-**Week 1: MongoDB Fundamentals Assignment**
+MongoDB Setup and Usage Guide
 
-**Objective:**
+Prerequisites
 
-- Apply MongoDB concepts learned throughout the week.
-- Practice working with databases, collections, and documents.
-- Develop skills in CRUD operations and data modeling.
+Ensure you have the following installed:
 
-**Instructions:**
+MongoDB Community Server
 
-1. **Setup MongoDB:**
+MongoDB Shell (mongosh)
 
-   - Install MongoDB locally or create a free cluster on MongoDB Atlas.
-   - Start the MongoDB server locally or connect to the MongoDB Atlas cluster.
-   - Verify the installation and connection by running:
-     ```sh
-     mongo --version
-     ```
+MongoDB Compass (optional) for GUI-based database management
 
-2. **Database and Collection Creation:**
+Installation Steps
 
-   - Create a new database called `library`.
-   - Inside `library`, create a collection named `books`.
+Download MongoDB:
 
-3. **Insert Data:**
+Install MongoDB Community Server from the official website.
 
-   - Insert at least five book records into the `books` collection.
-   - Each book should contain fields such as `title`, `author`, `publishedYear`, `genre`, and `ISBN`.
+Follow the installation instructions based on your operating system.
 
-4. **Retrieve Data:**
+Verify Installation:
 
-   - Retrieve all books from the collection.
-   - Query books based on a specific author.
-   - Find books published after the year 2000.
+Open a terminal or command prompt and run:
 
-5. **Update Data:**
+mongod --version
+mongosh --version
 
-   - Update the `publishedYear` of a specific book.
-   - Add a new field called `rating` to all books and set a default value.
+If both commands return version numbers, MongoDB is successfully installed.
 
-6. **Delete Data:**
+Start MongoDB Server:
 
-   - Delete a book by its `ISBN`.
-   - Remove all books of a particular genre.
+Run the following command to start the MongoDB service:
 
-7. **Data Modeling Exercise:**
+mongod
 
-   - Create a data model for an e-commerce platform including collections for `users`, `orders`, and `products`.
-   - Decide on appropriate fields and relationships (embedding vs. referencing).
-   - Implement the structure using MongoDB.
+Connect to MongoDB Shell:
 
-8. **Aggregation Pipeline:**
+Open another terminal and run:
 
-   - Use aggregation to find the total number of books per genre.
-   - Calculate the average published year of all books.
-   - Identify the top-rated book.
+mongosh
 
-9. **Indexing:**
+This connects you to the MongoDB instance.
 
-   - Create an index on the `author` field to optimize query performance.
-   - Explain the benefits of indexing in MongoDB.
+Database Setup
 
-10. **Testing:**
+1. Create a Database
 
-   - Use the MongoDB shell or Compass to verify the inserted and updated records.
-   - Ensure all queries return the expected results.
+use library
 
-11. **Documentation:**
+2. Create a Collection
 
-   - Create a `README.md` file with step-by-step instructions on setting up and running your database.
+library> db.books
 
-12. **Submission:**
+3. Insert Data
 
-   - Push your code and scripts to your GitHub repository.
+db.books.insertMany([
+  { title: "The Great Gatsby", author: "F. Scott Fitzgerald", publishedYear: 1925, genre: "Classic", ISBN: "978-0-7432-7356-5" },
+  { title: "1984", author: "George Orwell", publishedYear: 1949, genre: "Dystopian", ISBN: "978-0-452-28423-4" }
+]);
 
-**Evaluation Criteria:**
+4. Retrieve Data
 
-- Proper setup and connection of MongoDB.
-- Accurate implementation of CRUD operations.
-- Correct data modeling with appropriate relationships.
-- Use of aggregation for insightful queries.
-- Clear and concise documentation.
-- Proper indexing implementation.
+Get all books:
+
+db.books.find({});
+
+Find books by author:
+
+db.books.find({ author: "George Orwell" });
+
+Find books published after 2000:
+
+db.books.find({ publishedYear: { $gt: 2000 } });
+
+5. Update Data
+
+Update a book's published year:
+
+db.books.updateOne({ title: "1984" }, { $set: { publishedYear: 1950 } });
+
+Add a new field (rating) to all books:
+
+db.books.updateMany({}, { $set: { rating: 5.0 } });
+
+6. Delete Data
+
+Delete a book by ISBN:
+
+db.books.deleteOne({ ISBN: "978-0-7432-7356-5" });
+
+Remove all books in a genre:
+
+db.books.deleteMany({ genre: "Dystopian" });
+
+Aggregation Queries
+
+Total number of books per genre:
+
+db.books.aggregate([
+  { $group: { _id: "$genre", totalBooks: { $sum: 1 } } }
+]);
+
+Average published year:
+
+db.books.aggregate([
+  { $group: { _id: null, avgPublishedYear: { $avg: "$publishedYear" } } }
+]);
+
+Top-rated book:
+
+db.books.aggregate([
+  { $sort: { rating: -1 } },
+  { $limit: 1 }
+]);
+
+Indexing
+
+Create an index on the author field:
+
+db.books.createIndex({ author: 1 });
+
+Why use indexing?
+
+Indexing improves query performance by reducing search time, making queries on indexed fields faster.
+
+Additional Setup for an E-Commerce Database
+
+Create Users Collection
+
+db.createCollection('users');
+
+Create Orders Collection
+
+db.createCollection('orders');
+
+Create Products Collection
+
+db.createCollection('products');
+
+Insert Sample Data
+
+db.users.insertOne({
+  name: "Alice Johnson",
+  email: "alice@example.com",
+  orders: []
+});
+
+
+Troubleshooting
+
+Error: mongosh not recognized
+
+Ensure MongoDB Shell (mongosh) is installed and added to the system PATH.
+
+Query not returning expected results?
+
+Check for typos in field names and values.
 
