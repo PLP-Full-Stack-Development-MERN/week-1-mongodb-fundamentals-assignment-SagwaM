@@ -124,3 +124,7 @@ library> db.books.aggregate([
 //Task 8: Indexing
 library> db.books.createIndex({ author: 1 });
 author_1
+
+ /*Why use indexing?
+
+Indexing improves query performance by reducing search time, making queries on indexed fields faster.
