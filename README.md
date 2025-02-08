@@ -1,29 +1,29 @@
-MongoDB Setup and Usage Guide
+**MongoDB Setup and Usage Guide**
 
 Prerequisites
 
 Ensure you have the following installed:
 
-MongoDB Community Server
+-MongoDB Community Server
 
-MongoDB Shell (mongosh)
+-MongoDB Shell (mongosh)
 
-MongoDB Compass (optional) for GUI-based database management
+-MongoDB Compass for GUI-based database management
 
-Installation Steps
+*Installation Steps*
 
-Download MongoDB:
+-Download MongoDB:
 
-Install MongoDB Community Server from the official website.
+-Install MongoDB Community Server from the official website.
 
-Follow the installation instructions based on your operating system.
+-Follow the installation instructions based on your operating system.
 
-Verify Installation:
+-Verify Installation:
 
 Open a terminal or command prompt and run:
 
-mongod --version
-mongosh --version
+-mongod --version
+-mongosh --version
 
 If both commands return version numbers, MongoDB is successfully installed.
 
@@ -41,7 +41,7 @@ mongosh
 
 This connects you to the MongoDB instance.
 
-Database Setup
+**Database Setup**
 
 1. Create a Database
 
@@ -60,84 +60,85 @@ db.books.insertMany([
 
 4. Retrieve Data
 
-Get all books:
+ a) Get all books:
 
 db.books.find({});
 
-Find books by author:
+ b) Find books by author:
 
 db.books.find({ author: "George Orwell" });
 
-Find books published after 2000:
+ c) Find books published after 2000:
 
 db.books.find({ publishedYear: { $gt: 2000 } });
 
 5. Update Data
 
-Update a book's published year:
+ a) Update a book's published year:
 
 db.books.updateOne({ title: "1984" }, { $set: { publishedYear: 1950 } });
 
-Add a new field (rating) to all books:
+ b) Add a new field (rating) to all books:
 
 db.books.updateMany({}, { $set: { rating: 5.0 } });
 
 6. Delete Data
 
-Delete a book by ISBN:
+ a) Delete a book by ISBN:
 
 db.books.deleteOne({ ISBN: "978-0-7432-7356-5" });
 
-Remove all books in a genre:
+ b) Remove all books in a genre:
 
 db.books.deleteMany({ genre: "Dystopian" });
 
-Aggregation Queries
+7. Aggregation Queries
 
-Total number of books per genre:
+ a) Total number of books per genre:
 
 db.books.aggregate([
   { $group: { _id: "$genre", totalBooks: { $sum: 1 } } }
 ]);
 
-Average published year:
+ b) Average published year:
 
 db.books.aggregate([
   { $group: { _id: null, avgPublishedYear: { $avg: "$publishedYear" } } }
 ]);
 
-Top-rated book:
+c) Top-rated book:
 
 db.books.aggregate([
   { $sort: { rating: -1 } },
   { $limit: 1 }
 ]);
 
-Indexing
+8 Indexing
 
-Create an index on the author field:
+ a) Create an index on the author field:
 
 db.books.createIndex({ author: 1 });
 
-Why use indexing?
+ b) Why use indexing?
 
 Indexing improves query performance by reducing search time, making queries on indexed fields faster.
 
-Additional Setup for an E-Commerce Database
+9) Additional Setup for an E-Commerce Database
 
-Create Users Collection
+-Create Users Collection
+use e-commerce
 
-db.createCollection('users');
+e-commerce.users
 
 Create Orders Collection
 
-db.createCollection('orders');
+e-commerce.orders
 
 Create Products Collection
 
-db.createCollection('products');
+e-commerce.products
 
-Insert Sample Data
+*Insert Sample Data*
 
 db.users.insertOne({
   name: "Alice Johnson",
@@ -146,7 +147,7 @@ db.users.insertOne({
 });
 
 
-Troubleshooting
+**Troubleshooting**
 
 Error: mongosh not recognized
 
