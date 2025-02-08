@@ -24,3 +24,103 @@ library> db.books.updateMany({},{$set: {rating:7.0}});
 //Task 5: Delete Data
 library> db.books.deleteOne({ISBN: '978-0-06-112008-4',});
 library> db.books.deleteMany({genre: "Fantasy"});
+
+//Task 6: Data Modeling
+test> use e-commerce
+switched to db e-commerce
+
+//Embedding
+e-commerce> db.users.insertMany([ 
+    ... {name: "Alice Johnson", 
+    ... email: "alice@example.com", 
+    ... address: "123 Main Street, NY", 
+    ... orders: [
+        {items: [
+            {product: "Wireless Headphones", quantity: 1, price: 99.99 }, 
+            { product: "USB-C Charger", quantity: 2, price: 19.99 } ],
+            totalAmount: 139.97, 
+            status: "Delivered", 
+            orderDate: ISODate("2024-02-07T10:00:00Z")}]}, 
+    ... { name: "Bob Williams", 
+    ... email: "bob@example.com", 
+    ... address: "456 Oak Avenue, TX", 
+    ... orders:[ 
+        { items: [
+            {product: "Bluetooth Speaker", quantity: 1, price: 49.99 } ], 
+            totalAmount: 49.99, 
+            status: "Shipped",
+            orderDate: ISODate("2024-02-06T15:30:00Z")
+        }
+      ]}
+    ]);
+
+e-commerce> db.products.insertMany([
+    ... { name: "Wireless Headphones",
+    ... category: "Electronics",
+    ... price: 99.99,
+    ... stock: 50,
+    ... description: "High-quality noise-canceling headphones"
+    ... },
+    ... {  name: "USB-C Charger",
+    ...  category: "Accessories",
+    ... price: 19.99,
+    ... stock: 100,
+    ... description: "Fast-charging USB-C adapter"
+    ... },
+    ... { name: "Bluetooth Speaker",
+    ... category: "Electronics",
+    ... price: 49.99,
+    ... stock: 30,
+    ... description: "Portable speaker with deep bass"
+    ... },
+    ... ]);
+
+//Referencing    
+e-commerce> db.users.insertMany([
+    ... {name: "Alice Johnson",
+    ... email: "alice@example.com",
+    ... address: "123 Main Street, NY",
+    ... },
+    ... {name: "Bob Williams",
+    ... email: "bob@example.com",
+    ... address: "456 Oak Avenue, TX",
+    ... }]);
+
+e-commerce> db.orders.insertMany([
+    ... {user: ObjectId("67a70db49f826c5b904d7942"),
+    ... items: [
+    ... {productId: ObjectId('67a70f369f826c5b904d7944'), quantity: 1, price: 99.99},
+    ... {productId:  ObjectId('67a70f369f826c5b904d7945'), quantity: 2, price: 19.99}
+    ... ],
+    ... totalAmount: 139.97,
+    ... status: "Delivered",
+    ... orderDate: ISODate("2024-02-07T10:00:00Z")
+    ... },
+    ... {user: ObjectId("67a70db49f826c5b904d7943"),
+    ... items: [
+    ... {productId: ObjectId('67a70f369f826c5b904d7946'), quantity: 1, price: 49.99}
+    ... ],
+    ... totalAmount: 49.99,
+    ... status: "Shipped",
+    ... orderDate: ISODate("2024-02-06T15:30:00Z")
+    ... }
+    ... ]);
+
+//Task 7: Aggregation Pipeline
+library> db.books.aggregate([
+    ... {$group: {_id: "$genre", totalBooks: {$sum: 1}}}
+    ... ]);
+  
+library> db.books.aggregate([
+    ... {$group: {_id: null, avgPublishedYear: {$avg: "$publishedYear"}}}
+    ... ]);   
+
+library> db.books.aggregate([
+    ... {$sort: {rating: -1} }, 
+    ... {$limit: 1}
+    ... ]);
+
+
+//Task 8: Indexing
+library> db.books.createIndex({ author: 1 });
+author_1
